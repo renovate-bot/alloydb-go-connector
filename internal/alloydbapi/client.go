@@ -45,12 +45,12 @@ type GenerateClientCertificateResponse struct {
 }
 
 // baseURL is the production API endpoint of the AlloyDB Admin API
-const baseURL = "https://alloydb.googleapis.com"
+const baseURL = "https://alloydb.googleapis.com/v1beta"
 
 type Client struct {
 	client *http.Client
 	// endpoint is the base URL for the AlloyDB Admin API (e.g.
-	// https://alloydb.googleapis.com)
+	// https://alloydb.googleapis.com/v1beta)
 	endpoint string
 }
 
@@ -71,7 +71,7 @@ func NewClient(ctx context.Context, opts ...option.ClientOption) (*Client, error
 
 func (c *Client) InstanceGet(ctx context.Context, project, region, cluster, instance string) (InstanceGetResponse, error) {
 	u := fmt.Sprintf(
-		"%s/v1alpha1/projects/%s/locations/%s/clusters/%s/instances/%s",
+		"%s/projects/%s/locations/%s/clusters/%s/instances/%s",
 		c.endpoint, project, region, cluster, instance,
 	)
 	req, err := http.NewRequestWithContext(ctx, "GET", u, nil)
@@ -82,14 +82,14 @@ func (c *Client) InstanceGet(ctx context.Context, project, region, cluster, inst
 	if err != nil {
 		return InstanceGetResponse{}, err
 	}
-	if res != nil && res.StatusCode == http.StatusNotModified {
-		var body []byte
-		if res.Body != nil {
-			defer res.Body.Close()
-			body, err = ioutil.ReadAll(res.Body)
-			if err != nil {
-				return InstanceGetResponse{}, err
-			}
+	defer res.Body.Close()
+
+	// If the status code is 300 or greater, capture any information in the
+	// response and return it as part of the error.
+	if res.StatusCode >= http.StatusMultipleChoices {
+		body, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			return InstanceGetResponse{}, err
 		}
 
 		return InstanceGetResponse{}, &googleapi.Error{
@@ -98,10 +98,6 @@ func (c *Client) InstanceGet(ctx context.Context, project, region, cluster, inst
 			Body:   string(body),
 		}
 	}
-	if err != nil {
-		return InstanceGetResponse{}, err
-	}
-	defer res.Body.Close()
 	ret := InstanceGetResponse{
 		ServerResponse: googleapi.ServerResponse{
 			Header:         res.Header,
@@ -116,7 +112,7 @@ func (c *Client) InstanceGet(ctx context.Context, project, region, cluster, inst
 
 func (c *Client) GenerateClientCert(ctx context.Context, project, region, cluster string, csr []byte) (GenerateClientCertificateResponse, error) {
 	u := fmt.Sprintf(
-		"%s/v1alpha1/projects/%s/locations/%s/clusters/%s:generateClientCertificate",
+		"%s/projects/%s/locations/%s/clusters/%s:generateClientCertificate",
 		c.endpoint, project, region, cluster,
 	)
 	body, err := json.Marshal(GenerateClientCertificateRequest{PemCSR: string(csr)})
@@ -132,6 +128,20 @@ func (c *Client) GenerateClientCert(ctx context.Context, project, region, cluste
 		return GenerateClientCertificateResponse{}, err
 	}
 	defer res.Body.Close()
+	// If the status code is 300 or greater, capture any information in the
+	// response and return it as part of the error.
+	if res.StatusCode >= http.StatusMultipleChoices {
+		body, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			return GenerateClientCertificateResponse{}, err
+		}
+
+		return GenerateClientCertificateResponse{}, &googleapi.Error{
+			Code:   res.StatusCode,
+			Header: res.Header,
+			Body:   string(body),
+		}
+	}
 	ret := GenerateClientCertificateResponse{
 		ServerResponse: googleapi.ServerResponse{
 			Header:         res.Header,

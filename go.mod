@@ -4,10 +4,10 @@ go 1.24.0
 
 require (
 	cloud.google.com/go/alloydb v1.20.0
-	cloud.google.com/go/auth v0.18.0
+	cloud.google.com/go/auth v0.18.1
 	cloud.google.com/go/auth/oauth2adapt v0.2.8
 	cloud.google.com/go/monitoring v1.24.3
-	github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/metric v0.54.0
+	github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/metric v0.55.0
 	github.com/google/go-cmp v0.7.0
 	github.com/google/uuid v1.6.0
 	github.com/jackc/pgx/v4 v4.18.3
@@ -20,8 +20,8 @@ require (
 	golang.org/x/net v0.49.0
 	golang.org/x/oauth2 v0.34.0
 	golang.org/x/time v0.14.0
-	google.golang.org/api v0.259.0
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260112192933-99fd39fd28a9
+	google.golang.org/api v0.264.0
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260122232226-8e98ce8d340d
 	google.golang.org/grpc v1.78.0
 	google.golang.org/protobuf v1.36.11
 )
@@ -30,14 +30,14 @@ require (
 	cloud.google.com/go v0.121.6 // indirect
 	cloud.google.com/go/compute/metadata v0.9.0 // indirect
 	cloud.google.com/go/longrunning v0.7.0 // indirect
-	github.com/GoogleCloudPlatform/opentelemetry-operations-go/internal/resourcemapping v0.54.0 // indirect
+	github.com/GoogleCloudPlatform/opentelemetry-operations-go/internal/resourcemapping v0.55.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/go-logr/logr v1.4.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/google/s2a-go v0.1.9 // indirect
-	github.com/googleapis/enterprise-certificate-proxy v0.3.7 // indirect
+	github.com/googleapis/enterprise-certificate-proxy v0.3.11 // indirect
 	github.com/googleapis/gax-go/v2 v2.16.0 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.14.3 // indirect
